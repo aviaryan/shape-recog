@@ -8,16 +8,17 @@ OnExit, end_it_all
 ;--------------------
 
 global PROGNAME := "Shape Recog"
-global drawspace
+global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
-
+global M
+global PI := asin(1)*2
+global ACC = 20*PI/180
 ;--------------------
 ;  L A S T   S T E P S
 ;--------------------
 
 makeGUI()
-Gui, Show, w860, % PROGNAME
 
 Return
 
@@ -27,13 +28,15 @@ Return
 
 detectCorners(){
 	len := COORDS.maxIndex()
+	CORNS := {}
 
 	M := 10
 	if (len < 100)
 		M := round( M * (len/100.0) )
 
-	static PI := asin(1)*2
-	static ACC = 20*PI/180
+	LMT := 20
+	if (len < 100)
+		LMT := round( LMT * (len/100.0) )
 
 	ST := 0, tobj := {}
 
@@ -50,7 +53,7 @@ detectCorners(){
 				ST := 1
 			} else {
 				if (ST){
-					if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < 20) )
+					if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < LMT) )
 						CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
 				}
 				tobj := {}
@@ -60,13 +63,52 @@ detectCorners(){
 	}
 
 	if (ST){
-		if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < 20) )
+		if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < LMT) )
 			CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
 	}
 
 	; CORNS calculated. Now proceed
 	for k,v in CORNS
 		msgbox % "Vertex " V
+}
+
+
+detectShape(){
+/*
+0 = LINE
+1 = TRIANGLE
+2 = SQUARE
+3 = RECTANGLE
+4 = CIRCLE
+*/
+	k := CORNS.MaxIndex()
+	if (k == 2)
+		return 1
+	else if (k == 3){
+		z := quadOrTriangle()
+		if (z==1)
+			return 1
+		else
+			return SquareOrRect()
+	} else if (k == 4)
+		return SquareOrRect()
+	else
+		return 4
+}
+
+quadOrTriangle(){
+	static A45 := asin(1)/2.0
+	fslope := calcSlope(COORDS[1+M], COORDS[1])
+	lv := ObjhasValue(CORNS[3])
+	lslope := calcSlope(COORDS[lv+M], CORNS[3])
+	if (calcAngle(lslope, fslope) < A45)
+		return 1
+	else
+		return 3
+}
+
+SquareOrRect(){
+	return 2
 }
 
 calcAngle(slope1, slope2){
@@ -105,16 +147,24 @@ calcSlope(p1, p2){
 makeGUI(){
 	global
 
+	Gui, 1:new
+	Gui, 1:Default
 	Gui, Font, s20, Consolas
 	Gui, Add, Text, x5 y5, % PROGNAME
 	Gui, Font, s14
 	Gui, Add, ActiveX, xp y+20 w400 h400 vdrawspace, msinkaut.InkPicture.1
-	Gui, Add, Picture, x+20 yp w400 h400 voutput,
+	Gui, Add, Picture, x+10 yp w400 h400 voutput,
+	Gui, Font, s10
+	Gui, Add, Text, x+20 yp h20, % "LOGS"
+	Gui, Add, Edit, xp y+0 w200 h380 vlogs +ReadOnly +VScroll
+	Gui, Font, s14
 	Gui, Add, Button, x5 y+10 gclear, Clear
 	Gui, Add, Button, x+20 yp gdetect, Detect
 
 	drawspace.AutoRedraw := 1
 	ComObjConnect(drawspace, drawspace_events)
+
+	Gui, Show, w1060, % PROGNAME
 	return
 
 
@@ -131,16 +181,26 @@ clear:
 	return
 
 detect:
+	showMsg("`nDetection Starting ...")
 	detectCorners()
+	showMsg("Corners Found : " CORNS.MaxIndex())
+	x := detectShape()
+	showMsg("Shape Detected As : " resolveShapeId(x))
 	return
+}
+
+showMsg(msg){
+	Gui, 1:submit, NoHide
+	GuiControlGet, logs
+	GuiControl,, logs, % logs "`n" msg
+	ControlSend, Edit1, ^{End}, % PROGNAME  " ahk_class AutoHotkeyGUI"
 }
 
 class drawspace_events {
 	MouseMove(button, shift, px, py, cancel){
 		if (GetKeyState("LButton", "P")){
-			;px := Round(px/1.0) , py := Round(py/1.0)
 			if ( ObjhasValue(px "-" py) == 0 ){
-				Tooltip, % "x " px "`ny " py "`n" COORDS.maxIndex(),,, 2
+				;Tooltip, % "x " px "`ny " py "`n" COORDS.maxIndex(),,, 2
 				COORDS.Insert(px "-" py)
 			}
 		}

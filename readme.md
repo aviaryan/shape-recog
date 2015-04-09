@@ -10,7 +10,7 @@
 * 3 vertexed figures can be either triangle or qualidateral. But in triangle the backward slope of first vertex and forward slope of last vertex are same. So that separates 
  it from the qualidateral.
 * The point+10th and point-10th approach has a problem when the vertex is drawm at the end of the drawing sequence. Then the last points are overlooked and so vertex is never found. But extra looping for the last points seems to solve this problem.
-* 
+* The angle threshold for 3-vertex triangles and qualidaterals is 45 degree. As a perfect triangle is supposed to make 0 and a perfect qualidateral 90, 45 works perfectly fine.
 
 ### CHALLENGES
 
