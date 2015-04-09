@@ -14,6 +14,7 @@ global CORNS = Object()
 global M
 global PI := asin(1)*2
 global ACC = 20*PI/180
+global FVERTEXCT
 ;--------------------
 ;  L A S T   S T E P S
 ;--------------------
@@ -29,6 +30,7 @@ Return
 detectCorners(){
 	len := COORDS.maxIndex()
 	CORNS := {}
+	FVERTEXCT := 0
 
 	M := 10
 	if (len < 100)
@@ -51,6 +53,7 @@ detectCorners(){
 			if ( Z > ACC ){
 				tobj.Insert(COORDS[A_Index])
 				ST := 1
+				FVERTEXCT++
 			} else {
 				if (ST){
 					if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < LMT) )
@@ -82,6 +85,11 @@ detectShape(){
 4 = CIRCLE
 */
 	k := CORNS.MaxIndex()
+	validateFigure()
+	if (!k)
+		return circleOrLine()
+	else if (k==1)
+		return circleOrLine()
 	if (k == 2)
 		return 1
 	else if (k == 3){
@@ -93,7 +101,7 @@ detectShape(){
 	} else if (k == 4)
 		return SquareOrRect()
 	else
-		return 4
+		return -1
 }
 
 quadOrTriangle(){
@@ -108,7 +116,25 @@ quadOrTriangle(){
 }
 
 SquareOrRect(){
+	; in 3 vertex sq , the starting point will be the fourth point
 	return 2
+}
+
+circleOrLine(){
+	percent := FVERTEXCT / (COORDS.maxIndex()-2*M)
+	if (percent > 0.7) ; generally this is seen
+		return 4
+	else if (percent < 0.2)
+		return 0
+	else
+		return -1
+}
+
+validateFigure(){
+	; The function will see if figure is closed or not
+	lp := COORDS[ COORDS.MaxIndex() ]
+	fp := COORDS[1]
+	distance(lp, fp)
 }
 
 calcAngle(slope1, slope2){
@@ -124,7 +150,7 @@ calcAngle(slope1, slope2){
 		Z := abs( atan( (slope2 - slope1) / (1 + slope2*slope1) ) )
 
 	if (Z>PI2) ; obtuse angle
-		Z := PI2*2 - Z
+		Z := PI - Z
 	return Z
 }
 

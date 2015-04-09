@@ -13,6 +13,8 @@ resolveShapeId(ID){
 		return "RECTANGLE"
 	else if (id == 4)
 		return "CIRCLE"
+	else
+		return "INVALID"
 }
 
 distance(p1, p2){

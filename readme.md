@@ -11,6 +11,8 @@
  it from the qualidateral.
 * The point+10th and point-10th approach has a problem when the vertex is drawm at the end of the drawing sequence. Then the last points are overlooked and so vertex is never found. But extra looping for the last points seems to solve this problem.
 * The angle threshold for 3-vertex triangles and qualidaterals is 45 degree. As a perfect triangle is supposed to make 0 and a perfect qualidateral 90, 45 works perfectly fine.
+* For qualidaterals with 3-vertex, the fourth vertex will essentially be the starting point.
+* Circles and Lines are both 0-vertex figures but in CIRCLE the ratio of `*potential vertices*/*total vertices*` is close to 1 and in line its close to 0.
 
 ### CHALLENGES
 
