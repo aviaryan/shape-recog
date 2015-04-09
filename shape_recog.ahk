@@ -22,42 +22,70 @@ Gui, Show, w860, % PROGNAME
 Return
 
 ;----------------------
-; E N D   A U T O E X E C U T E
+; S H A P E    D E T E C T I O N
 ;----------------------
 
-shapeDetect(){
+detectCorners(){
 	len := COORDS.maxIndex()
-	static M := 10
+
+	M := 10
+	if (len < 100)
+		M := round( M * (len/100.0) )
+
 	static PI := asin(1)*2
 	static ACC = 20*PI/180
-	static PI2 := PI/2
 
-	ST := 0
+	ST := 0, tobj := {}
 
-	loop % len
+	loop % len-M
 	{
 		if (A_index>M){
 			cur := calcSlope( COORDS[A_index], COORDS[A_index-M] )
 			pre := calcSlope( COORDS[A_index+M], COORDS[A_index] )
 
-			if (cur == "INF"){
-				if (pre != "INF")
-					Z := abs( PI2 - atan(pre) )
-				else Z := 0.000
-			} else if (pre == "INF"){
-				Z := abs(PI2-atan(cur))
-			} else
-				Z := abs( atan( (cur - pre) / (1 + cur*pre) ) )
+			Z := calcAngle(pre, cur)
 
 			if ( Z > ACC ){
-				msgbox % ST "F" COORDS[A_index]
+				tobj.Insert(COORDS[A_Index])
 				ST := 1
-			} else
+			} else {
+				if (ST){
+					if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < 20) )
+						CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
+				}
+				tobj := {}
 				ST := 0
+			}
 		}
 	}
 
+	if (ST){
+		if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < 20) )
+			CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
+	}
+
+	; CORNS calculated. Now proceed
+	for k,v in CORNS
+		msgbox % "Vertex " V
 }
+
+calcAngle(slope1, slope2){
+	static PI2 := asin(1)
+
+	if (slope2 == "INF"){
+		if (slope1 != "INF")
+			Z := abs( PI2 - atan(slope1) )
+		else Z := 0.000
+	} else if (slope1 == "INF"){
+		Z := abs(PI2-atan(slope2))
+	} else
+		Z := abs( atan( (slope2 - slope1) / (1 + slope2*slope1) ) )
+
+	if (Z>PI2) ; obtuse angle
+		Z := PI2*2 - Z
+	return Z
+}
+
 
 calcSlope(p1, p2){
 	p2x := Substr(p2, 1, Instr(p2, "-")-1)
@@ -103,14 +131,14 @@ clear:
 	return
 
 detect:
-	shapeDetect()
+	detectCorners()
 	return
 }
 
 class drawspace_events {
 	MouseMove(button, shift, px, py, cancel){
 		if (GetKeyState("LButton", "P")){
-			px := Round(px/1.0) , py := Round(py/1.0)
+			;px := Round(px/1.0) , py := Round(py/1.0)
 			if ( ObjhasValue(px "-" py) == 0 ){
 				Tooltip, % "x " px "`ny " py "`n" COORDS.maxIndex(),,, 2
 				COORDS.Insert(px "-" py)
