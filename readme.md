@@ -17,7 +17,7 @@
 * Creating **Directional Vectors** of coords can help to get the correct angle between 2 edges. Dot (Scalar) Product can help.
 * Now when we have angles, we can validate if a figure is a correct triangle/square/rectangle or not.
 * For 1-vertex figures which can accidentally be a circle, we check for the ratio discussed earlier. If ratio is OK, that's a circle else INVALID.
-* 
+* Calculating angles for polygons is much better when angle is calculated with help of adjacent vertices. This way we get the best approximated figure.
 
 ### CHALLENGES
 

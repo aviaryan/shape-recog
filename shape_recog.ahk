@@ -40,7 +40,7 @@ global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
 
-global MSLOPE := 10, M
+global MSLOPE := 10, MSLOPELL := 3, M
 global DIST_APART := 80
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
@@ -64,10 +64,11 @@ detectCorners(){
 	M := MSLOPE
 	if (len < 100)
 		M := round( M * (len/100.0) )
+	if (M<MSLOPELL)
+		M := MSLOPELL
 
 	LMT := 20
-	if (len < 100)
-		LMT := round( LMT * (len/100.0) )
+	LMT := round( LMT * (M/MSLOPE) )
 
 	ST := 0, tobj := {}
 
@@ -85,7 +86,7 @@ detectCorners(){
 				FVERTEXCT++
 			} else {
 				if (ST){
-					if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < LMT) )
+					if ( (TOBJ.MaxIndex() > 2) && (TOBJ.MaxIndex() < LMT) )
 						CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
 				}
 				tobj := {}
@@ -127,8 +128,10 @@ detectShape(){
 		z := quadOrTriangle()
 		if (z==1)
 			return validateTriangle()
-		else
+		else if (z != -1)
 			return SquareOrRect()
+		else
+			return -1
 	} else if (k == 4)
 		return SquareOrRect()
 	else
@@ -138,10 +141,7 @@ detectShape(){
 quadOrTriangle(){
 	static A30 := asin(1)/3
 	static A70 := asin(1)/1.25
-	;fslope := calcSlope(COORDS[1+M], COORDS[1])
 	fslope := calcSlope(CORNS[1], COORDS[1])
-	lv := ObjhasValue(CORNS[3])
-	;lslope := calcSlope(COORDS[lv+M], CORNS[3])
 	lslope := calcSlope(COORDS[COORDS.maxIndex()], CORNS[3])
 
 	if (calcAngle(lslope, fslope) < A30)
@@ -199,8 +199,7 @@ calcAngle(slope1, slope2){
 
 	if (Z>PI2) ; obtuse angle
 	{
-		Z := PI - Z
-		msgbox it is
+		Z := PI - Z ; comes in INF case
 	}
 	return Z
 }
@@ -236,7 +235,6 @@ makeGUI(){
 	Gui, Add, Edit, xp y+0 w200 h380 vlogs +ReadOnly +VScroll
 	Gui, Font, s14
 	Gui, Add, Button, x5 y+10 gclear, Clear
-	;Gui, Add, Button, x+20 yp gdetect, Detect
 
 	drawspace.AutoRedraw := 1
 	ComObjConnect(drawspace, drawspace_events)
@@ -277,6 +275,7 @@ showMsg(msg){
 class drawspace_events {
 	MouseMove(button, shift, px, py, cancel){
 		if (GetKeyState("LButton", "P")){
+			py := 400-py ; invert that m**
 			if ( ObjhasValue(px "-" py) == 0 ){
 				;Tooltip, % "x " px "`ny " py "`n" COORDS.maxIndex(),,, 2
 				COORDS.Insert(px "-" py)

@@ -42,6 +42,18 @@ angleAtVertex(p1){
 	return angleFromPoints(pb, pc, pf)
 }
 
+angleAtVertexALAS(v_id){ ; Aliases the effect of small slopes, makes use of vertices nicely
+	if (v_id == 1)
+		fp := COORDS[1]
+	else
+		fp := CORNS[v_id-1]
+	if (v_id == CORNS.maxIndex())
+		lp := COORDS[COORDS.maxIndex()]
+	else
+		lp := CORNS[v_id+1]
+	return angleFromPoints(fp, CORNS[v_id], lp)
+}
+
 angleFromPoints(pb, pc, pf){
 	vf := MakeVector(pc, pf)
 	vb := MakeVector(pc, pb)
