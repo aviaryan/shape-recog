@@ -17,8 +17,3 @@
 * Now when we have angles, we can validate if a figure is a correct triangle/square/rectangle or not.
 * For 1-vertex figures which can accidentally be a circle, we check for the ratio discussed earlier. If ratio is OK, that's a circle else INVALID.
 * Calculating angles for polygons is much better when angle is calculated with help of adjacent vertices. This way we get the best approximated figure.
-
-### CHALLENGES
-
-* If drawings is coiled again and again, then duplicate slopes will be detected and hence the program will fail.
-* In case of triangle, very large obtuse angles can be a problem. Then maybe we can first identify the triangle and then take care of that obtuse thing.
