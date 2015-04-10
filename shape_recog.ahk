@@ -39,12 +39,19 @@ global PI2 := asin(1)
 global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
+global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2
+global FVERTEXCT
+
+;---------------------
+;  S E T T I N G S
+;---------------------
 
 global MSLOPE := 10, MSLOPELL := 3, M
 global DIST_APART := 80
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
-global FVERTEXCT
+global RANGLEACC := 20*PI/180
+global QUADACC := 60*PI/180
 ;--------------------
 ;  L A S T   S T E P S
 ;--------------------
@@ -129,40 +136,33 @@ detectShape(){
 		if (z==1)
 			return validateTriangle()
 		else if (z != -1)
-			return SquareOrRect()
-		else
-			return -1
+			return validateQuad()
 	} else if (k == 4)
-		return SquareOrRect()
+		return validateQuad()
 	else
 		return -1
 }
 
 quadOrTriangle(){
 	static A30 := asin(1)/3
-	static A70 := asin(1)/1.25
+	static NINETYACC := PI2 - RANGLEACC
 	fslope := calcSlope(CORNS[1], COORDS[1])
 	lslope := calcSlope(COORDS[COORDS.maxIndex()], CORNS[3])
 
 	if (calcAngle(lslope, fslope) < A30)
-		return 1
-	else if (calcAngle(lslope, fslope) > A70)
-		return 3
+		return ID_TRI
+	else if (calcAngle(lslope, fslope) > NINETYACC)
+		return ID_RECT
 	else
-		return -1
-}
-
-SquareOrRect(){
-	; in 3 vertex sq , the starting point will be the fourth point
-	return 2
+		return ID_RECT  	; validateQUAD() will figure this out
 }
 
 circleOrLine(){
 	percent := FVERTEXCT / (COORDS.maxIndex()-2*M)
 	if (percent > 0.7) ; generally this is seen
-		return 4
+		return ID_CIR
 	else if (percent < 0.2)
-		return 0
+		return ID_LINE
 	else
 		return -1
 }
@@ -171,7 +171,7 @@ validateCircle(){
 	x := circleOrLine()
 	if (x<4) ; if line or invalid
 		return -1
-	else return 4
+	else return ID_CIR
 }
 
 validateFigure(){
@@ -302,3 +302,4 @@ end_it_all:
 
 #include lib\misc.ahk
 #include lib\triangle.ahk
+#include lib\quad.ahk

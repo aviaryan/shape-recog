@@ -3,17 +3,19 @@
 */
 
 resolveShapeId(ID){
-	if (id == 0)
+	if (id == ID_LINE)
 		return "LINE"
-	else if (id == 1)
+	else if (id == ID_TRI)
 		return "TRIANGLE"
-	else if (id == 2)
+	else if (id == ID_SQ)
 		return "SQUARE"
-	else if (id == 3)
+	else if (id == ID_RECT)
 		return "RECTANGLE"
-	else if (id == 4)
+	else if (id == ID_CIR)
 		return "CIRCLE"
-	else
+	else if (id == ID_QUAD)
+		return "INVALID (QUAD)"
+	else if (id < 0)
 		return "INVALID"
 }
 
@@ -57,10 +59,10 @@ angleAtVertexALAS(v_id){ ; Aliases the effect of small slopes, makes use of vert
 angleFromPoints(pb, pc, pf){
 	vf := MakeVector(pc, pf)
 	vb := MakeVector(pc, pb)
-	return anglefromVertex(vf, vb)
+	return anglefromVector(vf, vb)
 }
 
-anglefromVertex(vf, vb){
+anglefromVector(vf, vb){
 	modside := ModVector(vf) * ModVector(vb)
 	modfull := vf[1]*vb[1] + vf[2]*vb[2]
 	costheta := modfull / modside

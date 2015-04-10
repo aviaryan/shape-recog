@@ -8,11 +8,9 @@ validateTriangle(){
 		angle += validateAngle( angleAtVertexALAS(k) )
 
 	if (z<3)
-		angle += validateAngle( anglefromVertex( makeVector(COORDS[1], COORDS[1+M]) , makeVector(COORDS[t], COORDS[t-M]) ) )
+		angle += validateAngle( anglefromVector( makeVector(COORDS[1], CORNS[1]) , makeVector(COORDS[t], CORNS[2]) ) )
 
 	if ( Abs(angle-PI) < TRIACC )
-		return 1
+		return ID_TRI
 	else return -1
-
-	return 1
 }
