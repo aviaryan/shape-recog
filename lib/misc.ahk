@@ -56,7 +56,7 @@ anglefromVertex(vf, vb){
 }
 
 validateAngle(a){
-	return a>ACC ? a : -10
+	return a>ACC ? a : -100
 }
 
 /*

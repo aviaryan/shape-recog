@@ -1,3 +1,29 @@
+/*
+	ShapeRecog
+
+	Copyright 2015 Avi Aryan
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
+/*
+	REFERNCES
+
+	InkPicture - https://msdn.microsoft.com/en-us/library/windows/desktop/ms704450%28v=vs.85%29.aspx
+*/
+
+
+
 SetWorkingDir, % A_ScriptDir
 SetBatchlines, -1
 #SingleInstance, force
@@ -17,7 +43,7 @@ global CORNS = Object()
 global MSLOPE := 10, M
 global DIST_APART := 80
 global ACC = 20*PI/180
-global TRIACC := 40*PI/180
+global TRIACC := 30*PI/180
 global FVERTEXCT
 ;--------------------
 ;  L A S T   S T E P S
@@ -100,7 +126,7 @@ detectShape(){
 	else if (k == 3){
 		z := quadOrTriangle()
 		if (z==1)
-			return 1
+			return validateTriangle()
 		else
 			return SquareOrRect()
 	} else if (k == 4)
@@ -110,14 +136,20 @@ detectShape(){
 }
 
 quadOrTriangle(){
-	static A45 := asin(1)/2.0
-	fslope := calcSlope(COORDS[1+M], COORDS[1])
+	static A30 := asin(1)/3
+	static A70 := asin(1)/1.25
+	;fslope := calcSlope(COORDS[1+M], COORDS[1])
+	fslope := calcSlope(CORNS[1], COORDS[1])
 	lv := ObjhasValue(CORNS[3])
-	lslope := calcSlope(COORDS[lv+M], CORNS[3])
-	if (calcAngle(lslope, fslope) < A45)
+	;lslope := calcSlope(COORDS[lv+M], CORNS[3])
+	lslope := calcSlope(COORDS[COORDS.maxIndex()], CORNS[3])
+
+	if (calcAngle(lslope, fslope) < A30)
 		return 1
-	else
+	else if (calcAngle(lslope, fslope) > A70)
 		return 3
+	else
+		return -1
 }
 
 SquareOrRect(){
@@ -127,7 +159,7 @@ SquareOrRect(){
 
 circleOrLine(){
 	percent := FVERTEXCT / (COORDS.maxIndex()-2*M)
-	if (percent > 0.6) ; generally this is seen
+	if (percent > 0.7) ; generally this is seen
 		return 4
 	else if (percent < 0.2)
 		return 0
@@ -143,7 +175,6 @@ validateCircle(){
 }
 
 validateFigure(){
-	; instead of this validate all geometric figures independently
 	; The function will see if figure is closed or not
 	; lp := COORDS[ COORDS.MaxIndex() ]
 	; fp := COORDS[1]
@@ -167,7 +198,10 @@ calcAngle(slope1, slope2){
 		Z := abs( atan( (slope2 - slope1) / (1 + slope2*slope1) ) )
 
 	if (Z>PI2) ; obtuse angle
+	{
 		Z := PI - Z
+		msgbox it is
+	}
 	return Z
 }
 
@@ -202,7 +236,7 @@ makeGUI(){
 	Gui, Add, Edit, xp y+0 w200 h380 vlogs +ReadOnly +VScroll
 	Gui, Font, s14
 	Gui, Add, Button, x5 y+10 gclear, Clear
-	Gui, Add, Button, x+20 yp gdetect, Detect
+	;Gui, Add, Button, x+20 yp gdetect, Detect
 
 	drawspace.AutoRedraw := 1
 	ComObjConnect(drawspace, drawspace_events)
@@ -222,15 +256,15 @@ clear:
 	COORDS := Object()
 	CORNS := Object()
 	return
+}
 
-detect:
+detect(){
 	showMsg("`nDetection Starting ...")
 	showMsg("`nPoints recorded : " COORDS.MaxIndex())
 	detectCorners()
 	showMsg("Corners Found : " CORNS.MaxIndex())
 	x := detectShape()
 	showMsg("Shape Detected As : " resolveShapeId(x))
-	return
 }
 
 showMsg(msg){
@@ -248,6 +282,11 @@ class drawspace_events {
 				COORDS.Insert(px "-" py)
 			}
 		}
+	}
+
+	Stroke(cursor, stroke, cancel){ ; after a stroke is drawn
+		detect()
+		COORDS := {}
 	}
 }
 
