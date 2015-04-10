@@ -8,19 +8,22 @@ OnExit, end_it_all
 ;--------------------
 
 global PROGNAME := "Shape Recog"
+global PI := asin(1)*2
+global PI2 := asin(1)
 global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
-global M
-global PI := asin(1)*2
+
+global MSLOPE := 10, M
+global DIST_APART := 80
 global ACC = 20*PI/180
+global TRIACC := 40*PI/180
 global FVERTEXCT
 ;--------------------
 ;  L A S T   S T E P S
 ;--------------------
 
 makeGUI()
-
 Return
 
 ;----------------------
@@ -32,7 +35,7 @@ detectCorners(){
 	CORNS := {}
 	FVERTEXCT := 0
 
-	M := 10
+	M := MSLOPE
 	if (len < 100)
 		M := round( M * (len/100.0) )
 
@@ -85,13 +88,15 @@ detectShape(){
 4 = CIRCLE
 */
 	k := CORNS.MaxIndex()
-	validateFigure()
 	if (!k)
 		return circleOrLine()
 	else if (k==1)
-		return circleOrLine()
+		return validateCircle() ;validate
+	; now after LINE is resolved, validate figure
+	if !validateFigure()
+		return -1
 	if (k == 2)
-		return 1
+		return validateTriangle()
 	else if (k == 3){
 		z := quadOrTriangle()
 		if (z==1)
@@ -122,7 +127,7 @@ SquareOrRect(){
 
 circleOrLine(){
 	percent := FVERTEXCT / (COORDS.maxIndex()-2*M)
-	if (percent > 0.7) ; generally this is seen
+	if (percent > 0.6) ; generally this is seen
 		return 4
 	else if (percent < 0.2)
 		return 0
@@ -130,15 +135,27 @@ circleOrLine(){
 		return -1
 }
 
+validateCircle(){
+	x := circleOrLine()
+	if (x<4) ; if line or invalid
+		return -1
+	else return 4
+}
+
 validateFigure(){
+	; instead of this validate all geometric figures independently
 	; The function will see if figure is closed or not
-	lp := COORDS[ COORDS.MaxIndex() ]
-	fp := COORDS[1]
-	distance(lp, fp)
+	; lp := COORDS[ COORDS.MaxIndex() ]
+	; fp := COORDS[1]
+	; z := distance(lp, fp)
+	; D := (M/MSLOPE * DIST_APART)
+	; if (z>D)
+	; 	return 0
+	; else return 1
+	return 1
 }
 
 calcAngle(slope1, slope2){
-	static PI2 := asin(1)
 
 	if (slope2 == "INF"){
 		if (slope1 != "INF")
@@ -208,6 +225,7 @@ clear:
 
 detect:
 	showMsg("`nDetection Starting ...")
+	showMsg("`nPoints recorded : " COORDS.MaxIndex())
 	detectCorners()
 	showMsg("Corners Found : " CORNS.MaxIndex())
 	x := detectShape()
@@ -245,3 +263,4 @@ end_it_all:
 ;--------------------------------
 
 #include lib\misc.ahk
+#include lib\triangle.ahk
