@@ -17,6 +17,8 @@ resolveShapeId(ID){
 		return "INVALID (QUAD)"
 	else if (id == ID_DIST)
 		return "INVALID (DIST_ERROR)"
+	else if (id == ID_OVAL)
+		return "INVALID (OVAL)"
 	else if (id < 0)
 		return "INVALID"
 }
@@ -78,9 +80,16 @@ validateAngle(a){
 	return a>ACC ? a : -100
 }
 
-/*
-	GENERAL PURPOSE
-*/
+calcSlope(p1, p2){
+	p2x := Substr(p2, 1, Instr(p2, "-")-1)
+	p2y := Substr(p2, Instr(p2, "-")+1)
+	p1x := Substr(p1, 1, Instr(p1, "-")-1)
+	p1y := Substr(p1, Instr(p1, "-")+1)
+	if (p1x == p2x)
+		return "INF"
+	else
+		return (p2y-p1y)/(p2x-p1x)
+}
 
 MakeVector(p1, p2){
 	; remember p1 is tail, p2 is head

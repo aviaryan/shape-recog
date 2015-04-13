@@ -39,7 +39,8 @@ global PI2 := asin(1)
 global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
-global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3
+global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3, ID_OVAL := -4
+global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB
 global FVERTEXCT
 
 ;---------------------
@@ -52,6 +53,8 @@ global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 global RANGLEACC := 15*PI/180
 global QUADACC := 60*PI/180
+global CIRCACC := 0.4
+
 ;--------------------
 ;  L A S T   S T E P S
 ;--------------------
@@ -122,8 +125,12 @@ detectShape(){
 4 = CIRCLE
 */
 	k := CORNS.MaxIndex()
-	if (!k)
-		return circleOrLine()
+	if (!k){
+		x := circleOrLine()
+		if (x==ID_CIR)
+			return validateCircle()
+		else return x
+	}
 	else if (k==1)
 		return validateCircle() ;validate
 	; now after LINE is resolved, validate figure
@@ -167,13 +174,6 @@ circleOrLine(){
 		return -1
 }
 
-validateCircle(){
-	x := circleOrLine()
-	if (x<4) ; if line or invalid
-		return -1
-	else return ID_CIR
-}
-
 validatePolygonFigure(){
 	; http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
 	p2 := COORDS[COORDS.maxIndex()]
@@ -212,16 +212,23 @@ calcAngle(slope1, slope2){
 	return Z
 }
 
-
-calcSlope(p1, p2){
-	p2x := Substr(p2, 1, Instr(p2, "-")-1)
-	p2y := Substr(p2, Instr(p2, "-")+1)
-	p1x := Substr(p1, 1, Instr(p1, "-")-1)
-	p1y := Substr(p1, Instr(p1, "-")+1)
-	if (p1x == p2x)
-		return "INF"
-	else
-		return (p2y-p1y)/(p2x-p1x)
+boundaries(){
+	PXL := 401
+	PXR := 0
+	PYT := 0
+	PYB := 401
+	for k,v in COORDS
+	{
+		givePoints(v, tx, ty)
+		if (tx<PXL)
+			PXL := tx, PYL := ty
+		if (tx>PXR)
+			PXR := tx, PYR := ty
+		if (ty>PYT)
+			PYT := ty, PXT := tx
+		if (ty<PYB)
+			PYB := ty, PXB := tx
+	}
 }
 
 ;-----------------------

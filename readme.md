@@ -19,8 +19,8 @@
 * Calculating angles for polygons is much better when angle is calculated with help of adjacent vertices. This way we get the best approximated figure.
 * Now to validate if figures drawn are closed and symbolically correct, we can use the fact that distance(last_point, first_point) should always be less than 
  distance(last_vertex, first_point). Cases which violate this test should be caught in the *Angle Test*.
-* I am also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend 
-to close.
+* We are also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend to close.
+* To validate circles, we calculate the Horizontal Diameter and the Vertical Diameter and compare them. We also check if co-ordinates for these diameters are aligned or not. If the co-ordinates are aligned but diameters are different, the figure is an *oval*.
 
 ### What we learned from this project
 
