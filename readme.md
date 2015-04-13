@@ -1,6 +1,10 @@
 # Shape Recog
 
-### HOW IT WAS DONE
+Shape Recog is a figure analyzer and synthesizer. It scans a drawn figure and checks if it's square, rectangle, triangle, circle, line or INVALID. After analyzing a figure, 
+it then redraws the perfect representation of that figure.
+  
+
+### How it was done
 
 * Main Aim was to detect vertices of the figure
 * If vertices are infinite (or 0), then it is a circle. - If vertices are 2 or 3, then it is a triangle. If vertices are 3 or 4, then it is a quadrilateral.
@@ -21,6 +25,7 @@
  distance(last_vertex, first_point). Cases which violate this test should be caught in the *Angle Test*.
 * We are also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend to close.
 * To validate circles, we calculate the Horizontal Diameter and the Vertical Diameter and compare them. We also check if co-ordinates for these diameters are aligned or not. If the co-ordinates are aligned but diameters are different, the figure is an *oval*.
+
 
 ### What we learned from this project
 

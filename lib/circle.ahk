@@ -1,5 +1,5 @@
+
 validateCircle(){
-	boundaries()
 	rh := PXR-PXL
 	rv := PYT-PYB
 	rmin := rh>rv ? rv : rh

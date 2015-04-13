@@ -40,7 +40,7 @@ global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
 global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3, ID_OVAL := -4
-global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB
+global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB, FIGSZ
 global FVERTEXCT
 
 ;---------------------
@@ -48,7 +48,7 @@ global FVERTEXCT
 ;---------------------
 
 global MSLOPE := 10, MSLOPELL := 3, M
-global DIST_APART := 40
+global DIST_APART := 0.3
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 global RANGLEACC := 15*PI/180
@@ -68,6 +68,7 @@ Return
 
 detectCorners(){
 	len := COORDS.maxIndex()
+	boundaries()
 	CORNS := {}
 	FVERTEXCT := 0
 
@@ -106,7 +107,7 @@ detectCorners(){
 	}
 
 	if (ST){
-		if ( (TOBJ.MaxIndex() > 3) && (TOBJ.MaxIndex() < LMT) )
+		if ( (TOBJ.MaxIndex() > 2) && (TOBJ.MaxIndex() < LMT) )
 			CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
 	}
 
@@ -184,7 +185,7 @@ validatePolygonFigure(){
 	num := abs( (p2y-p1y)*p0x - (p2x-p1x)*p0y + (p2x*p1y-p2y*p1x) )
 	den := sqrt( (p2y-p1y)**2 + (p2x-p1x)**2 )
 	z := num/den
-	if (z>DIST_APART)
+	if ( z > (DIST_APART*FIGSZ) )
 		return ID_DIST
 	; check IF vector last is pointing in right direction
 	lastp := distance(COORDS[1], p2)
@@ -229,6 +230,7 @@ boundaries(){
 		if (ty<PYB)
 			PYB := ty, PXB := tx
 	}
+	FIGSZ := ((PYT-PYB) + (PXR-PXL))/2
 }
 
 ;-----------------------
