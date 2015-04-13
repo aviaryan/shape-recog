@@ -320,3 +320,4 @@ end_it_all:
 #include lib\misc.ahk
 #include lib\triangle.ahk
 #include lib\quad.ahk
+#include lib\circle.ahk
