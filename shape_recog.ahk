@@ -36,7 +36,7 @@ OnExit, end_it_all
 global PROGNAME := "Shape Recog"
 global PI := asin(1)*2
 global PI2 := asin(1)
-global drawspace, logs
+global drawspace, logs, prev_point := "600-600"
 global COORDS = Object()
 global CORNS = Object()
 global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3, ID_OVAL := -4
@@ -47,12 +47,13 @@ global FVERTEXCT
 ;  S E T T I N G S
 ;---------------------
 
-global MSLOPE := 10, MSLOPELL := 3, M
+global MSLOPE := 10, MSLOPELL := 3, M, LMT
 global DIST_APART := 0.3
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 global RANGLEACC := 15*PI/180
-global QUADACC := 60*PI/180
+; not possible that everywhere you make>90 so a lower value whould work
+global QUADACC := 30*PI/180 
 global CIRCACC := 0.4
 
 ;--------------------
@@ -133,7 +134,7 @@ detectShape(){
 		else return x
 	}
 	else if (k==1)
-		return validateCircle() ;validate
+		return -1 ;validateCircle()
 	; now after LINE is resolved, validate figure
 	if ( (P:=validatePolygonFigure())<1 )
 		return P
@@ -295,16 +296,18 @@ class drawspace_events {
 	MouseMove(button, shift, px, py, cancel){
 		if (GetKeyState("LButton", "P")){
 			py := 400-py ; invert that m**
-			if ( ObjhasValue(px "-" py) == 0 ){
-				;Tooltip, % "x " px "`ny " py "`n" COORDS.maxIndex(),,, 2
-				COORDS.Insert(px "-" py)
-			}
+			if ( ObjhasValue(px "-" py) == 0 )
+				if (distance(px "-" py, prev_point) > 3){
+					COORDS.Insert(px "-" py)
+					prev_point := px "-" py
+				}
 		}
 	}
 
 	Stroke(cursor, stroke, cancel){ ; after a stroke is drawn
 		detect()
 		COORDS := {}
+		prev_point := "600-600"
 	}
 }
 
