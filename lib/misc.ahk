@@ -15,16 +15,21 @@ resolveShapeId(ID){
 		return "CIRCLE"
 	else if (id == ID_QUAD)
 		return "INVALID (QUAD)"
+	else if (id == ID_DIST)
+		return "INVALID (DIST_ERROR)"
 	else if (id < 0)
 		return "INVALID"
 }
 
 distance(p1, p2){
-	p2x := Substr(p2, 1, Instr(p2, "-")-1)
-	p2y := Substr(p2, Instr(p2, "-")+1)
-	p1x := Substr(p1, 1, Instr(p1, "-")-1)
-	p1y := Substr(p1, Instr(p1, "-")+1)
+	givePoints(p2, p2x, p2y)
+	givePoints(p1, p1x, p1y)
 	return Sqrt( (p2y-p1y)**2 + (p2x-p1x)**2 )
+}
+
+givePoints(p1, byref x1, byref y1){
+	x1 := Substr(p1, 1, Instr(p1, "-")-1)
+	y1 := Substr(p1, Instr(p1, "-")+1)
 }
 
 realATan(x){

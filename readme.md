@@ -17,3 +17,7 @@
 * Now when we have angles, we can validate if a figure is a correct triangle/square/rectangle or not.
 * For 1-vertex figures which can accidentally be a circle, we check for the ratio discussed earlier. If ratio is OK, that's a circle else INVALID.
 * Calculating angles for polygons is much better when angle is calculated with help of adjacent vertices. This way we get the best approximated figure.
+* Now to validate if figures drawn are closed and symbolically correct, we can use the fact that distance(last_point, first_point) should always be less than 
+ distance(last_vertex, first_point). Cases which violate this test should be caught in the *Angle Test*.
+* I am also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend 
+to close.

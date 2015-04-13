@@ -39,7 +39,7 @@ global PI2 := asin(1)
 global drawspace, logs
 global COORDS = Object()
 global CORNS = Object()
-global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2
+global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3
 global FVERTEXCT
 
 ;---------------------
@@ -47,7 +47,7 @@ global FVERTEXCT
 ;---------------------
 
 global MSLOPE := 10, MSLOPELL := 3, M
-global DIST_APART := 80
+global DIST_APART := 40
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 global RANGLEACC := 20*PI/180
@@ -127,8 +127,8 @@ detectShape(){
 	else if (k==1)
 		return validateCircle() ;validate
 	; now after LINE is resolved, validate figure
-	if !validateFigure()
-		return -1
+	if ( (P:=validatePolygonFigure())<1 )
+		return P
 	if (k == 2)
 		return validateTriangle()
 	else if (k == 3){
@@ -144,7 +144,7 @@ detectShape(){
 }
 
 quadOrTriangle(){
-	static A30 := asin(1)/3
+	static A22 := asin(1)/4
 	static NINETYACC := PI2 - RANGLEACC
 	fslope := calcSlope(CORNS[1], COORDS[1])
 	lslope := calcSlope(COORDS[COORDS.maxIndex()], CORNS[3])
@@ -174,15 +174,23 @@ validateCircle(){
 	else return ID_CIR
 }
 
-validateFigure(){
-	; The function will see if figure is closed or not
-	; lp := COORDS[ COORDS.MaxIndex() ]
-	; fp := COORDS[1]
-	; z := distance(lp, fp)
-	; D := (M/MSLOPE * DIST_APART)
-	; if (z>D)
-	; 	return 0
-	; else return 1
+validatePolygonFigure(){
+	; http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+	p2 := COORDS[COORDS.maxIndex()]
+	p1 := CORNS[CORNS.maxIndex()]
+	givePoints(p2, p2x, p2y)
+	givePoints(p1, p1x, p1y)
+	givePoints(COORDS[1], p0x, p0y)
+	num := abs( (p2y-p1y)*p0x - (p2x-p1x)*p0y + (p2x*p1y-p2y*p1x) )
+	den := sqrt( (p2y-p1y)**2 + (p2x-p1x)**2 )
+	z := num/den
+	if (z>DIST_APART)
+		return ID_DIST
+	; check IF vector last is pointing in right direction
+	lastp := distance(COORDS[1], p2)
+	slastp := distance(COORDS[1], p1)
+	if (slastp < lastp)
+		return -1
 	return 1
 }
 
