@@ -50,7 +50,7 @@ global MSLOPE := 10, MSLOPELL := 3, M
 global DIST_APART := 40
 global ACC = 20*PI/180
 global TRIACC := 30*PI/180
-global RANGLEACC := 20*PI/180
+global RANGLEACC := 15*PI/180
 global QUADACC := 60*PI/180
 ;--------------------
 ;  L A S T   S T E P S
@@ -108,8 +108,8 @@ detectCorners(){
 	}
 
 	; CORNS calculated. Now proceed
-	for k,v in CORNS
-		msgbox % "Vertex " V
+	; for k,v in CORNS
+	; 	msgbox % "Vertex " V
 }
 
 
@@ -268,7 +268,9 @@ detect(){
 	showMsg("`nDetection Starting ...")
 	showMsg("`nPoints recorded : " COORDS.MaxIndex())
 	detectCorners()
-	showMsg("Corners Found : " CORNS.MaxIndex())
+	showMsg("Vertices Found : " CORNS.MaxIndex())
+	for k,v in CORNS
+		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
 	showMsg("Shape Detected As : " resolveShapeId(x))
 }
