@@ -55,6 +55,7 @@ global RANGLEACC := 15*PI/180
 ; not possible that everywhere you make>90 so a lower value whould work
 global QUADACC := 30*PI/180 
 global CIRCACC := 0.4
+global LINE_DIST_F := 4
 
 ;--------------------
 ;  L A S T   S T E P S
@@ -177,6 +178,8 @@ circleOrLine(){
 }
 
 validatePolygonFigure(){
+
+	; last line closes to starting point
 	; http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
 	p2 := COORDS[COORDS.maxIndex()]
 	p1 := CORNS[CORNS.maxIndex()]
@@ -188,11 +191,44 @@ validatePolygonFigure(){
 	z := num/den
 	if ( z > (DIST_APART*FIGSZ) )
 		return ID_DIST
+
 	; check IF vector last is pointing in right direction
 	lastp := distance(COORDS[1], p2)
 	slastp := distance(COORDS[1], p1)
 	if (slastp < lastp)
 		return -1
+
+	; edge dedication
+	; let tolerance depend on line length
+	z := CORNS.maxIndex()
+	loop % z+1
+	{
+		v := CORNS[A_Index]
+		lp := v
+		fp := CORNS[A_index-1]
+		if (A_index == 1)
+			fp := COORDS[1]
+		if (A_index>z)
+			lp := COORDS[COORDS.maxIndex()]
+		dist := distance(lp, fp)/LINE_DIST_F
+		givePoints(lp, p2x, p2y)
+		givePoints(fp, p1x, p1y)
+		startp := ObjhasValue(fp)
+		endp := ObjhasValue(lp)
+		times := endp-startp+1
+		loop % times
+		{
+			curp := COORDS[startp]
+			givePoints(curp, p0x, p0y)
+			num := abs( (p2y-p1y)*p0x - (p2x-p1x)*p0y + (p2x*p1y-p2y*p1x) )
+			den := sqrt( (p2y-p1y)**2 + (p2x-p1x)**2 )
+			zc := num/den
+			if (zc>dist)
+				return -1
+			startp++
+		}
+	}
+
 	return 1
 }
 

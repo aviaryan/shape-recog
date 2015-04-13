@@ -25,7 +25,8 @@ it then redraws the perfect representation of that figure.
  distance(last_vertex, first_point). Cases which violate this test should be caught in the *Angle Test*.
 * We are also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend to close.
 * To validate circles, we calculate the Horizontal Diameter and the Vertical Diameter and compare them. We also check if co-ordinates for these diameters are aligned or not. If the co-ordinates are aligned but diameters are different, the figure is an *oval*.
-  
+* For further validatin polygons, we check if lines drawn from vertex to vertex are straight or not. We will use the Distance Formula to check for the drawn line's difference with the ideal line.
+
 
 ### What we learned from this project
 
