@@ -50,11 +50,13 @@ global FVERTEXCT
 global MSLOPE := 10, MSLOPELL := 3, M, LMT
 global DIST_APART := 0.3
 global ACC = 20*PI/180
+
 global TRIACC := 30*PI/180
-global RANGLEACC := 15*PI/180
-; not possible that everywhere you make>90 so a lower value whould work
-global QUADACC := 30*PI/180
+
+global RANGLEACC := 15*PI/180 
+global QUADACC := 40*PI/180 ; not possible that everywhere you make>90 so a lower value whould work
 global QUADSIDEACC := 0.2
+
 global CIRCACC := 0.5
 ; division factor of distance curve can be away from the line
 global LINE_DIST_F := 4
@@ -116,11 +118,21 @@ detectCorners(){
 			CORNS.Insert( TOBJ[ Round(TOBJ.maxIndex()/2) ] )
 	}
 
-	; CORNS calculated. Now proceed
-	; for k,v in CORNS
-	; 	msgbox % "Vertex " V
+	validateCorners()
 }
 
+validateCorners(){
+	f := CORNS[1]
+	z := CORNS.maxIndex()
+	loop % z-1
+	{
+		if (distance(CORNS[A_index+1], f) < (FIGSZ/10)){
+			CORNS.Remove(A_index+1)
+			f := CORNS[A_index]
+		} else
+			f := CORNS[A_index+1]
+	}
+}
 
 detectShape(){
 /*
