@@ -13,19 +13,17 @@ it then redraws the perfect representation of that figure.
 * So we calculate mean of all the points in one family and take that as vertex.
 * 3 vertexe'd figures can be either triangle or quadrilateral. But in triangle the backward slope of first vertex and forward slope of last vertex are same. So that separates 
  it from the quadrilateral.
-* The point+10th and point-10th approach has a problem when the vertex is drawn at the end of the drawing sequence. Then the last points are overlooked and so vertex is never found. But extra looping for the last points seems to solve this problem.
 * For quadrilaterals with 3-vertex, the fourth vertex will essentially be the starting point.
-* Circles and Lines are both 0-vertex figures but in CIRCLE the ratio of `potential_vertices/total_vertices` is close to 1 and in line its close to 0.
+* Circles and Lines are both 0-vertex figures but in CIRCLE the ratio of `potential_vertices/total_points` is close to 1 and in line its close to 0.
 * Now the next aim is to detect the angles between edges. Angles will help greatly in removing figures that are actually not like the detected geometric figures.
 * Creating **Directional Vectors** of coords can help to get the correct angle between 2 edges. Dot (Scalar) Product can help.
 * Now when we have angles, we can validate if a figure is a correct triangle/square/rectangle or not.
-* For 1-vertex figures which can accidentally be a circle, we check for the ratio discussed earlier. If ratio is OK, that's a circle else INVALID.
 * Calculating angles for polygons is much better when angle is calculated with help of adjacent vertices. This way we get the best approximated figure.
 * Now to validate if figures drawn are closed and symbolically correct, we can use the fact that distance(last_point, first_point) should always be less than 
  distance(last_vertex, first_point). Cases which violate this test should be caught in the *Angle Test*.
 * We are also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend to close.
 * To validate circles, we calculate the Horizontal Diameter and the Vertical Diameter and compare them. We also check if co-ordinates for these diameters are aligned or not. If the co-ordinates are aligned but diameters are different, the figure is an *oval*.
-* For further validatin polygons, we check if lines drawn from vertex to vertex are straight or not. We will use the Distance Formula to check for the drawn line's difference with the ideal line.
+* For further validating polygons, we check if lines drawn from vertex to vertex are straight or not. We will use the Distance Formula to check for the drawn line's difference with the ideal line.
 
 
 ### What we learned from this project

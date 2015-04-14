@@ -53,8 +53,9 @@ global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 global RANGLEACC := 15*PI/180
 ; not possible that everywhere you make>90 so a lower value whould work
-global QUADACC := 30*PI/180 
-global CIRCACC := 0.4
+global QUADACC := 30*PI/180
+global CIRCACC := 0.5
+; division factor of distance curve can be away from the line
 global LINE_DIST_F := 4
 
 ;--------------------
@@ -143,7 +144,7 @@ detectShape(){
 		return validateTriangle()
 	else if (k == 3){
 		z := quadOrTriangle()
-		if (z==1)
+		if (z==ID_TRI)
 			return validateTriangle()
 		else if (z != -1)
 			return validateQuad()
@@ -159,7 +160,7 @@ quadOrTriangle(){
 	fslope := calcSlope(CORNS[1], COORDS[1])
 	lslope := calcSlope(COORDS[COORDS.maxIndex()], CORNS[3])
 
-	if (calcAngle(lslope, fslope) < A30)
+	if (calcAngle(lslope, fslope) < A22)
 		return ID_TRI
 	else if (calcAngle(lslope, fslope) > NINETYACC)
 		return ID_RECT
@@ -178,6 +179,12 @@ circleOrLine(){
 }
 
 validatePolygonFigure(){
+	; figure closing
+	lp := CORNS[CORNS.maxIndex()]
+	fp := COORDS[1]
+	x := distance(lp, fp)
+	if (distance(COORDS[COORDS.maxIndex()], fp) > (DIST_APART*x))
+		return -1
 
 	; last line closes to starting point
 	; http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
