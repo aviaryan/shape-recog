@@ -54,9 +54,11 @@ global TRIACC := 30*PI/180
 global RANGLEACC := 15*PI/180
 ; not possible that everywhere you make>90 so a lower value whould work
 global QUADACC := 30*PI/180
+global QUADSIDEACC := 0.2
 global CIRCACC := 0.5
 ; division factor of distance curve can be away from the line
 global LINE_DIST_F := 4
+
 
 ;--------------------
 ;  L A S T   S T E P S

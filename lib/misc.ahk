@@ -120,3 +120,9 @@ ObjhasValue(s){
 	return 0
 }
 
+min(a,b){
+	return a>b ? b : a
+}
+max(a,b){
+	return a>b ? a : b
+}

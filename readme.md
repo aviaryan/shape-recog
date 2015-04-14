@@ -24,6 +24,9 @@ it then redraws the perfect representation of that figure.
 * We are also using the [Distance Formula](http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points) to check if a figure will actually close or tend to close.
 * To validate circles, we calculate the Horizontal Diameter and the Vertical Diameter and compare them. We also check if co-ordinates for these diameters are aligned or not. If the co-ordinates are aligned but diameters are different, the figure is an *oval*.
 * For further validating polygons, we check if lines drawn from vertex to vertex are straight or not. We will use the Distance Formula to check for the drawn line's difference with the ideal line.
+* We also check if the figure is closing or not. If the last line completes 70% of length of what is should have done, then fine else figure will be shown as INVALID. Again this 
+70 is just a random appropriate figure and there's no mathemical proof of why it is used.
+* For figuring out whether Square or Rectangle, side lengths are sufficient. As this is done after all those checks for qualidateral, just testing the length works fine.
 
 
 ### What we learned from this project
