@@ -187,7 +187,7 @@ circleOrLine(){
 	if (percent > 0.7) ; generally this is seen
 		return ID_CIR
 	else if (percent < 0.2)
-		return ID_LINE
+		return validateLine() ;ID_LINE
 	else
 		return -1
 }

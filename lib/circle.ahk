@@ -16,3 +16,15 @@ validateCircle(){
 		return -1 ;ID_OVAL
 	return ID_CIR
 }
+
+
+validateLine(){
+	acbk := ACC
+	ACC := 6*PI/180
+	detectCorners()
+	ACC := acbk
+	if CORNS.maxIndex()
+		return -1
+	else
+		return ID_LINE
+}
