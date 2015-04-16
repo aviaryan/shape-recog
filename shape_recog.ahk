@@ -53,7 +53,7 @@ global ACC = 20*PI/180
 
 global TRIACC := 30*PI/180
 
-global RANGLEACC := 15*PI/180 
+global RANGLEACC := 15*PI/180
 global QUADACC := 40*PI/180 ; not possible that everywhere you make>90 so a lower value whould work
 global QUADSIDEACC := 0.2
 
