@@ -28,6 +28,8 @@ SetWorkingDir, % A_ScriptDir
 SetBatchlines, -1
 #SingleInstance, force
 OnExit, end_it_all
+RunWait, regsvr32.exe /s "%A_scriptdir%\GflAx.dll"
+FileDelete, % "i.bmp"
 
 ;--------------------
 ;  G L O B A L S
@@ -40,7 +42,7 @@ global drawspace, logs, prev_point := "600-600"
 global COORDS = Object()
 global CORNS = Object()
 global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3, ID_OVAL := -4
-global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB, FIGSZ
+global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB, FIGSZ, FIGSZSMALL
 global FVERTEXCT
 
 ;---------------------
@@ -126,7 +128,7 @@ validateCorners(){
 	z := CORNS.maxIndex()
 	loop % z-1
 	{
-		if (distance(CORNS[A_index+1], f) < (FIGSZ/10)){
+		if (distance(CORNS[A_index+1], f) < (FIGSZSMALL/10)){
 			CORNS.Remove(A_index+1)
 			f := CORNS[A_index]
 		} else
@@ -289,7 +291,12 @@ boundaries(){
 			PYB := ty, PXB := tx
 	}
 	FIGSZ := ((PYT-PYB) + (PXR-PXL))/2
+	FIGSZSMALL := min(PYT-PYB, PXR-PXL)
 }
+
+;-----------------------
+; D R A W I N G
+;-----------------------
 
 ;-----------------------
 ; G U I   S T U F F
@@ -328,6 +335,8 @@ clear:
 	drawspace.InkEnabled := true
 	COORDS := Object()
 	CORNS := Object()
+	FileDelete, % "i.bmp"
+	GuiControl,, output, % ""
 	return
 }
 
@@ -340,6 +349,8 @@ detect(){
 		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
 	showMsg("Shape Detected As : " resolveShapeId(x))
+	if (x>0)
+		GuiControl,, output, % "i.bmp"
 }
 
 showMsg(msg){
@@ -354,10 +365,10 @@ class drawspace_events {
 		if (GetKeyState("LButton", "P")){
 			py := 400-py ; invert that m**
 			if ( ObjhasValue(px "-" py) == 0 )
-				if (distance(px "-" py, prev_point) > 3){
+				;if (distance(px "-" py, prev_point) > 3){
 					COORDS.Insert(px "-" py)
-					prev_point := px "-" py
-				}
+				;	prev_point := px "-" py
+				;}
 		}
 	}
 
@@ -372,6 +383,8 @@ class drawspace_events {
 
 end_it_all:
 	drawspace := ""
+	RunWait, regsvr32.exe /u /s "%A_scriptdir%/Gflax.dll"
+	FileDelete, % "i.bmp"
 	ExitApp
 	return
 

@@ -34,6 +34,11 @@ givePoints(p1, byref x1, byref y1){
 	y1 := Substr(p1, Instr(p1, "-")+1)
 }
 
+givePointsInv(p1, byref x1, byref y1){
+	givePoints(p1, x1, y1)
+	y1 := 400-y1
+}
+
 realATan(x){
 	; returns ATan() in range 0-180 degrees (0-pi radians)
 	z := ATan(x)
@@ -125,4 +130,20 @@ min(a,b){
 }
 max(a,b){
 	return a>b ? a : b
+}
+
+
+;++++++++++++++++++++++++++++++++
+;      I N I T   D R A W I N G
+;++++++++++++++++++++++++++++++++
+
+initDrawing(){
+	PLT := ComObjCreate("GflAx.GflAx")
+	if FileExist("i.bmp")
+		PLT.LoadBitmap("i.bmp")
+	else
+		PLT.NewBitmap(400, 400)
+	PLT.SaveFormatName := "bmp"
+	PLT.LineWidth := PLT.LineWidth*2
+	return PLT
 }
