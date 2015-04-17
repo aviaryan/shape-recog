@@ -20,7 +20,8 @@ validateCircle(){
 
 validateLine(){
 	acbk := ACC
-	ACC := 6*PI/180
+	ACC := 10*PI/180
+	distantCOORDS(10)
 	detectCorners()
 	ACC := acbk
 	if CORNS.maxIndex()

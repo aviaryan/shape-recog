@@ -294,9 +294,16 @@ boundaries(){
 	FIGSZSMALL := min(PYT-PYB, PXR-PXL)
 }
 
-;-----------------------
-; D R A W I N G
-;-----------------------
+distantCOORDS(d){
+	pl := "600-600"
+	for k,v in COORDS
+	{
+		if (distance(V, pl) < d)
+			COORDS.Remove(k)
+		else
+			pl := v
+	}
+}
 
 ;-----------------------
 ; G U I   S T U F F

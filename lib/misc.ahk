@@ -39,6 +39,31 @@ givePointsInv(p1, byref x1, byref y1){
 	y1 := 400-y1
 }
 
+pIntersectStart(ByRef x, ByRef y){
+	; http://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
+	givePoints(COORDS[1], x1, y1)
+	givePoints(CORNS[1], x2, y2)
+	givePoints(CORNS[CORNS.maxIndex()], x3, y3)
+	givePoints(COORDS[COORDS.maxIndex()], x4, y4)
+	d := (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4)
+	if (d==0){
+		x = -1
+		y = -1
+		return
+	}
+	part1 := x1*y2 - y1*x2
+	part2 := x3*y4 - y3*x4
+	x := part1*(x3-x4) - (x1-x2)*part2
+	x/=d
+	y := part1*(y3-y4) - (y1-y2)*part2
+	y/=d
+}
+
+pIntersectStartInv(Byref x, Byref y){
+	pIntersectStart(x,y)
+	y := 400-y
+}
+
 realATan(x){
 	; returns ATan() in range 0-180 degrees (0-pi radians)
 	z := ATan(x)
@@ -144,6 +169,6 @@ initDrawing(){
 	else
 		PLT.NewBitmap(400, 400)
 	PLT.SaveFormatName := "bmp"
-	PLT.LineWidth := PLT.LineWidth*2
+	PLT.LineWidth := PLT.LineWidth*3
 	return PLT
 }

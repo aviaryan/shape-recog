@@ -29,7 +29,7 @@ it then redraws the perfect representation of that figure.
 * For figuring out whether Square or Rectangle, side lengths are sufficient. As this is done after all those checks for quadrilateral, just testing the length works fine.
 * Vertices detected very close to each other are settled to one. This is done as many people tremble around the vertex region.
 * There is no need for lines to differ by the threshold angle (20) as it is very large. After a line is detected, we re-check it with threshold angle of 5 to see if it's really a line.
-
+* For incomplete polygons (2-Triangle, 3-Rectangle), user will expect the intersection point to be a vertex. This fact is used in drawing to provide a more-expected correction.
 
 ### What we learned from this project
 

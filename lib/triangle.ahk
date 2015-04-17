@@ -24,7 +24,7 @@ drawTriangle(){
 	if (z==3)
 		givePointsInv(CORNS[3], x3, y3)
 	else
-		givePointsInv(COORDS[1], x0, y0)
+		pIntersectStartInv(x0, y0)
 
 	if (z==3){
 		PLT.DrawLine(x2, y2, x1, y1)
