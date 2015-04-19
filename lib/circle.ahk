@@ -8,7 +8,7 @@ validateCircle(){
 	if ( (rv*CIRCACC) < abs(PYL-PYR) )
 		return -1
 
-	if ( distance(COORDS, COORDS[COORDS.MaxIndex()]) > (DIST_APART*rmin) ) ; check for figure closing
+	if ( distance(COORDS[1], COORDS[COORDS.MaxIndex()]) > (DIST_APART*rmin) ) ; check for figure closing
 		return -1
 	; for circle rh == rv
 
@@ -27,5 +27,15 @@ validateLine(){
 	if CORNS.maxIndex()
 		return -1
 	else
-		return ID_LINE
+		return drawLine() ;ID_LINE
+}
+
+drawLine(){
+	plt := initDrawing()
+	givePointsInv(COORDS[1], p0x, p0y)
+	givePointsInv(COORDS[COORDS.maxIndex()], p1x, p1y)
+	plt.DrawLine(p0x, p0y, p1x, p1y)
+	plt.SaveBitmap("i")
+	ObjRelease(plt)
+	return ID_TRI
 }

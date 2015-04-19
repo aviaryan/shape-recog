@@ -49,9 +49,14 @@ SquareOrRect(){
 	p2 := min(s2, s4)
 	if (abs(s2-s4) > (QUADSIDEACC*p2))
 		return ID_QUAD
-	f := min(p1,p2)
+	f := max(p1,p2)
 	if (abs(p1-p2) <= (QUADSIDEACC*f))
 		return ID_SQ
 	else
 		return ID_RECT
+}
+
+drawRectangle(){
+	z := CORNS.maxIndex()
+	
 }
