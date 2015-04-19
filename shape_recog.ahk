@@ -25,7 +25,6 @@
 
 
 SetWorkingDir, % A_ScriptDir
-SetBatchlines, -1
 #SingleInstance, force
 OnExit, end_it_all
 RunWait, regsvr32.exe /s "%A_scriptdir%\GflAx.dll"
@@ -57,7 +56,8 @@ global TRIACC := 30*PI/180
 
 global RANGLEACC := 20*PI/180
 global QUADACC := 40*PI/180 ; not possible that everywhere you make>90 so a lower value whould work
-global QUADSIDEACC := 0.2
+global QUADSIDEACC := 0.3
+global SQACC := 0.2
 
 global CIRCACC := 0.5
 ; division factor of distance curve can be away from the line
@@ -200,7 +200,7 @@ validatePolygonFigure(){
 	fp := COORDS[1]
 	x := distance(lp, fp)
 	if (distance(COORDS[COORDS.maxIndex()], fp) > (DIST_APART*x))
-		return -1
+		return ID_DIST
 
 	; last line closes to starting point
 	; http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
@@ -356,7 +356,7 @@ detect(){
 		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
 	showMsg("Shape Detected As : " resolveShapeId(x))
-	if (x>0)
+	if (x>-1)
 		GuiControl,, output, % "i.bmp"
 }
 

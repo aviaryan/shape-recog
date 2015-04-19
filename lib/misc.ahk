@@ -30,8 +30,12 @@ distance(p1, p2){
 }
 
 givePoints(p1, byref x1, byref y1){
-	x1 := Substr(p1, 1, Instr(p1, "-")-1)
-	y1 := Substr(p1, Instr(p1, "-")+1)
+	if (Instr(p1,"-")==1)
+		sp := Instr(p1, "-", 0, 2)
+	else
+		sp := Instr(p1, "-")
+	x1 := Substr(p1, 1, sp-1)
+	y1 := Substr(p1, sp+1)
 }
 
 givePointsInv(p1, byref x1, byref y1){
@@ -101,8 +105,9 @@ angleFromPoints(pb, pc, pf){
 
 anglefromVector(vf, vb){
 	modside := ModVector(vf) * ModVector(vb)
-	modfull := vf[1]*vb[1] + vf[2]*vb[2]
+	modfull := (vf[1]*vb[1]) + (vf[2]*vb[2])
 	costheta := modfull / modside
+	costheta := costheta>1 ? 1 : (costheta<-1 ? -1 : costheta)
 	return acos( costheta )
 }
 
@@ -111,10 +116,8 @@ validateAngle(a){
 }
 
 calcSlope(p1, p2){
-	p2x := Substr(p2, 1, Instr(p2, "-")-1)
-	p2y := Substr(p2, Instr(p2, "-")+1)
-	p1x := Substr(p1, 1, Instr(p1, "-")-1)
-	p1y := Substr(p1, Instr(p1, "-")+1)
+	givePoints(p1, p1x, p1y)
+	givePoints(p2, p2x, p2y)
 	if (p1x == p2x)
 		return "INF"
 	else
@@ -124,19 +127,26 @@ calcSlope(p1, p2){
 MakeVector(p1, p2){
 	; remember p1 is tail, p2 is head
 	; NOTE that coordinate axes are not same here - upper y is 0 lower is 400
-	p2x := Substr(p2, 1, Instr(p2, "-")-1)
-	p2y := Substr(p2, Instr(p2, "-")+1)
-	p1x := Substr(p1, 1, Instr(p1, "-")-1)
-	p1y := Substr(p1, Instr(p1, "-")+1)
+	givePoints(p1, p1x, p1y)
+	givePoints(p2, p2x, p2y)
 	vx := p2x - p1x
 	vy := p2y - p1y
 	return {1: vx,2: vy}
 }
 
+MakeVectorCoords(x,y){
+	return {1: x, 2: y}
+}
+
+MakeUnitVector(v){
+	z := ModVector(v)
+	return {1: (v[1]/z), 2: (v[2]/z)}
+}
+
 ModVector(v){
 	vx := v[1]
 	vy := v[2]
-	return sqrt( vx*vx + vy*vy )
+	return sqrt( (vx*vx) + (vy*vy) )
 }
 
 radToAngle(rad){
@@ -169,6 +179,6 @@ initDrawing(){
 	else
 		PLT.NewBitmap(400, 400)
 	PLT.SaveFormatName := "bmp"
-	PLT.LineWidth := PLT.LineWidth*3
+	PLT.LineWidth := PLT.LineWidth*2
 	return PLT
 }

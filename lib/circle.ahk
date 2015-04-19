@@ -37,5 +37,5 @@ drawLine(){
 	plt.DrawLine(p0x, p0y, p1x, p1y)
 	plt.SaveBitmap("i")
 	ObjRelease(plt)
-	return ID_TRI
+	return ID_LINE
 }
