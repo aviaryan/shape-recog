@@ -3,6 +3,11 @@
 Shape Recog is a figure analyzer and synthesizer. It scans a drawn figure and checks if it's square, rectangle, triangle, circle, line or INVALID. After analyzing a figure, 
 it then redraws the perfect representation of that figure.
   
+### Screenshot
+
+[http://s21.postimg.org/frlupx2mf/rec.gif](http://s21.postimg.org/frlupx2mf/rec.gif)  
+![GIF][http://s21.postimg.org/frlupx2mf/rec.gif]
+  
 
 ### How it was done
 
