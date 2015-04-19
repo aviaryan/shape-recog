@@ -25,6 +25,7 @@
 
 
 SetWorkingDir, % A_ScriptDir
+SetBatchlines, -1
 #SingleInstance, force
 OnExit, end_it_all
 RunWait, regsvr32.exe /s "%A_scriptdir%\GflAx.dll"
@@ -38,7 +39,7 @@ global PROGNAME := "Shape Recog"
 global PI := asin(1)*2
 global PI2 := asin(1)
 global drawspace, logs, prev_point := "600-600"
-global COORDS = Object()
+global COORDS = Object(), COORDScpy
 global CORNS = Object()
 global ID_LINE := 0, ID_TRI := 1, ID_SQ := 2, ID_RECT = 3, ID_CIR := 4, ID_QUAD := -2, ID_DIST := -3, ID_OVAL := -4
 global PXL, PXR, PYT, PYB, PYL, PYR, PXT, PXB, FIGSZ, FIGSZSMALL
@@ -49,7 +50,7 @@ global FVERTEXCT
 ;---------------------
 
 global MSLOPE := 10, MSLOPELL := 3, M, LMT
-global DIST_APART := 0.3
+global DIST_APART := 0.5
 global ACC = 20*PI/180
 
 global TRIACC := 30*PI/180
@@ -60,6 +61,7 @@ global QUADSIDEACC := 0.3
 global SQACC := 0.2
 
 global CIRCACC := 0.5
+global CIRC_DIST_APART := 0.3
 ; division factor of distance curve can be away from the line
 global LINE_DIST_F := 4
 
@@ -350,11 +352,16 @@ clear:
 detect(){
 	showMsg("`nDetection Starting ...")
 	showMsg("`nPoints recorded : " COORDS.MaxIndex())
+	; COORDScpy := COORDS.clone()
+	; distantCOORDS(20)
+	;detectCircle()
 	detectCorners()
 	showMsg("Vertices Found : " CORNS.MaxIndex())
 	for k,v in CORNS
 		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
+	if (x<0)
+		x := forceCheckCircle()
 	showMsg("Shape Detected As : " resolveShapeId(x))
 	if (x>-1)
 		GuiControl,, output, % "i.bmp"

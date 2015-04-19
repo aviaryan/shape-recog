@@ -111,9 +111,9 @@ anglefromVector(vf, vb){
 	return acos( costheta )
 }
 
-validateAngle(a){
-	return a>ACC ? a : -100
-}
+; validateAngle(a){
+; 	return a>ACC ? a : -100
+; }
 
 calcSlope(p1, p2){
 	givePoints(p1, p1x, p1y)

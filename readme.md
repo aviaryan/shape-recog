@@ -31,6 +31,7 @@ it then redraws the perfect representation of that figure.
 * There is no need for lines to differ by the threshold angle (20) as it is very large. After a line is detected, we re-check it with threshold angle of 5 to see if it's really a line.
 * For incomplete polygons (2-Triangle, 3-Rectangle), user will expect the intersection point to be a vertex. This fact is used in drawing to provide a more-expected correction.
 * Drawing Squares and Rectangles was a challenging task as you have to make sure both edge length and angles are according to specifications. In here, we first determine the average length of a side and choose a vertex. Then we continue making sides perpendicular to the previous side and with proper edge length. Concept of Vectors play a huge role in making this possible.
+* A big problem was that vertices were detected in slow-drawn circles. So we force-check for circle in case of INVALID detection and draw a circle if found.
 
 
 ### What we learned from this project
