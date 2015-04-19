@@ -6,8 +6,8 @@ it then redraws the perfect representation of that figure.
 ### Screenshot
 
 [http://s21.postimg.org/frlupx2mf/rec.gif](http://s21.postimg.org/frlupx2mf/rec.gif)  
-![GIF][http://s21.postimg.org/frlupx2mf/rec.gif]
-  
+![GIF](http://s21.postimg.org/frlupx2mf/rec.gif)
+
 
 ### How it was done
 
