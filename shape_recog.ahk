@@ -325,7 +325,7 @@ makeGUI(){
 	Gui, Add, Text, x+20 yp h20, % "LOGS"
 	Gui, Add, Edit, xp y+0 w200 h380 vlogs +ReadOnly +VScroll
 	Gui, Font, s14
-	Gui, Add, Button, x5 y+10 gclear, Clear
+	Gui, Add, Button, x5 y+10 gclear, &Clear
 
 	drawspace.AutoRedraw := 1
 	ComObjConnect(drawspace, drawspace_events)
@@ -352,9 +352,6 @@ clear:
 detect(){
 	showMsg("`nDetection Starting ...")
 	showMsg("`nPoints recorded : " COORDS.MaxIndex())
-	; COORDScpy := COORDS.clone()
-	; distantCOORDS(20)
-	;detectCircle()
 	detectCorners()
 	showMsg("Vertices Found : " CORNS.MaxIndex())
 	for k,v in CORNS

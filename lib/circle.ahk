@@ -17,8 +17,9 @@ validateCircle(){
 	return drawCircle()
 }
 
-drawCircle(){
-	getCircle(x, y, d)
+drawCircle(x="", y="", d=""){
+	if !x
+		getCircle(x, y, d)
 	d /= 2
 	plt := initDrawing()
 	plt.DrawCircle(x, 400-y, d)
@@ -39,11 +40,15 @@ forceCheckCircle(){
 			s := 0
 			break
 		}
+		if (abs(d-da[A_index]) > df){
+			s := 0
+			break
+		}
 	}
 	if (s==0)
 		return -1
 	else {
-		return drawCircle()
+		return drawCircle(x,y,d)
 	}
 }
 
