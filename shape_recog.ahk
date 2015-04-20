@@ -26,6 +26,7 @@
 
 SetWorkingDir, % A_ScriptDir
 SetBatchlines, -1
+#NoEnv
 #SingleInstance, force
 OnExit, end_it_all
 RunWait, regsvr32.exe /s "%A_scriptdir%\GflAx.dll"
@@ -323,6 +324,7 @@ makeGUI(){
 	Gui, Add, Picture, x+10 yp w400 h400 voutput,
 	Gui, Font, s10
 	Gui, Add, Text, x+20 yp h20, % "LOGS"
+	Gui, Font, s8
 	Gui, Add, Edit, xp y+0 w200 h380 vlogs +ReadOnly +VScroll
 	Gui, Font, s14
 	Gui, Add, Button, x5 y+10 gclear, &Clear
@@ -357,8 +359,11 @@ detect(){
 	for k,v in CORNS
 		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
-	if (x==-1 || x==ID_DIST)
+	if (x==-1 || x==ID_DIST){
 		x := forceCheckCircle()
+		if (x>-1)
+			showMsg("Force-checking circle successful")
+	}
 	showMsg("Shape Detected As : " resolveShapeId(x))
 	if (x>-1)
 		GuiControl,, output, % "i.bmp"

@@ -113,7 +113,6 @@ drawQuad(issq=0){
 		pset1v := MakeVector(p[A_Index], pset1)
 		pset2v := MakeVector(p[A_index], pset2)
 
-		;msgbox % pset1 " " pset1v[1] " " pset1v[2] "`n" pset2 " " pset2v[1] " " pset2v[2] "`n" anglefromVector(pset1v, compv) " " anglefromVector(pset2v, compv) "`n" compv[1] " " compv[2]
 		pf := anglefromVector(pset1v, compv) < anglefromVector(pset2v, compv) ? pset1 : pset2
 		givePointsInv(p[A_Index], ix0, iy0)
 		givePointsInv(pf, ix1, iy1)
