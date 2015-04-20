@@ -19,8 +19,7 @@ validateQuad(){
 			suc := 0
 		angle += a
 	}
-
-	if (abs(angle-PI*2) > QUADACC) ; not even a qualidateral 
+	if (abs(angle-(PI*2)) > QUADACC) ; not even a qualidateral 
 		return -1
 	else if (suc == 0)
 		return ID_QUAD

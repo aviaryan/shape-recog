@@ -56,7 +56,7 @@ global ACC = 20*PI/180
 global TRIACC := 30*PI/180
 
 global RANGLEACC := 20*PI/180
-global QUADACC := 40*PI/180 ; not possible that everywhere you make>90 so a lower value whould work
+global QUADACC := 60*PI/180 ; not possible that everywhere you make>90 so a lower value whould work
 global QUADSIDEACC := 0.3
 global SQACC := 0.2
 
@@ -357,7 +357,7 @@ detect(){
 	for k,v in CORNS
 		showMsg("Vertex " A_Index " : " v)
 	x := detectShape()
-	if (x<0)
+	if (x==-1 || x==ID_DIST)
 		x := forceCheckCircle()
 	showMsg("Shape Detected As : " resolveShapeId(x))
 	if (x>-1)
